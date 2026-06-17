@@ -44,6 +44,9 @@ this.color = color;
  * @param enclHeight The height of the enclosure
  * @return A list of newly born horses
 public List<Horse> mate(Horse partner, int enclWidth, int enclHeight) {
+if (enclWidth <= 0 || enclHeight <= 0) {
+throw new IllegalArgumentException("Enclosure dimensions must be positive.");
+}
 List<Horse> children = new ArrayList<>();
 int numChildren = random.nextInt(3) + 1; // 1-3 children
 
