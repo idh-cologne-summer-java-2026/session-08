@@ -40,9 +40,9 @@ this.color = color;
  * Two horses mate and create a random number of children (1-3).
  * 
  * @param partner The partner of the current horse
- * @param enclosure The enclosure where the children will be placed
+ * @param enclWidth The width of the enclosure
+ * @param enclHeight The height of the enclosure
  * @return A list of newly born horses
- */
 public List<Horse> mate(Horse partner, int enclWidth, int enclHeight) {
 List<Horse> children = new ArrayList<>();
 int numChildren = random.nextInt(3) + 1; // 1-3 children
