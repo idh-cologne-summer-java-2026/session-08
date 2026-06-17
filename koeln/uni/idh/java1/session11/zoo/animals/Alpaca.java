@@ -26,6 +26,9 @@ this.name = name;
  * @return A list of newly born alpacas
  */
 public List<Alpaca> mate(Alpaca partner, int enclWidth, int enclHeight) {
+if (enclWidth <= 0 || enclHeight <= 0) {
+throw new IllegalArgumentException("Enclosure dimensions must be positive.");
+}
 List<Alpaca> children = new ArrayList<>();
 int numChildren = random.nextInt(2) + 1; // 1-2 children
 
