@@ -70,7 +70,7 @@ default:
  *                      right.
  */
 public void turn(int turnDirection) {
-this.direction = (int) (this.direction + (Math.signum(turnDirection) * 90) % 360);
+this.direction = (int) ((this.direction + (Math.signum(turnDirection) * 90) + 360) % 360);
 }
 
 /**
