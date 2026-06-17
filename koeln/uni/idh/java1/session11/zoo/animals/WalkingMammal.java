@@ -44,17 +44,19 @@ public void walk() {
 
 switch (direction) {
 case 0:
-this.y = this.y - stepsize;
-break;
-case 180:
-this.x = this.x - stepsize;
-break;
-case 270:
-this.y = this.y + stepsize;
-break;
+  this.y = this.y - stepsize;
+  break;
 case 90:
-this.x = this.x + stepsize;
-}
+  this.x = this.x + stepsize;
+  break;
+case 180:
+  this.y = this.y + stepsize;
+  break;
+case 270:
+  this.x = this.x - stepsize;
+  break;
+default:
+  // unsupported direction; do nothing
 }
 
 /**
