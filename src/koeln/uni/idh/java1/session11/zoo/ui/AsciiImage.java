@@ -7,17 +7,17 @@ public class AsciiImage {
 	/**
 	 * The image itself, as ASCII-art
 	 */
-	private char[][] image;
+	private final char[][] image;
 
 	/**
 	 * Representation of a white pixel
 	 */
-	private char white = '.';
+	private static final char WHITE = '.';
 
 	/**
 	 * Representation of a black pixel
 	 */
-	private char black = '#';
+	private static final char BLACK = '#';
 
 	/**
 	 * Creates a new empty image with the given width, which is expressed as the
@@ -31,7 +31,7 @@ public class AsciiImage {
 		this.image = new char[height][width];
 		for (int h = 0; h < image.length; h++) {
 			for (int w = 0; w < image[0].length; w++) {
-				image[h][w] = white;
+				image[h][w] = WHITE;
 			}
 		}
 	}
@@ -43,7 +43,7 @@ public class AsciiImage {
 	 * @param y The vertical position of the pixel
 	 */
 	public void dot(int x, int y) {
-		image[y][x] = black;
+		image[y][x] = BLACK;
 	}
 
 	public void dot(int x, int y, WalkingMammal wm) {
@@ -55,15 +55,16 @@ public class AsciiImage {
 	/**
 	 * Generate the image as a String. Used for printing it to the user.
 	 */
+	@Override
 	public String toString() {
-		String r = "";
+		StringBuilder sb = new StringBuilder();
 		for (int h = 0; h < image.length; h++) {
 			for (int w = 0; w < image[h].length; w++) {
-				r += image[h][w];
+				sb.append(image[h][w]);
 			}
-			r += "\n";
+			sb.append('\n');
 		}
-		return r;
+		return sb.toString();
 	}
 
 	/**

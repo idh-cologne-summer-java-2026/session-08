@@ -43,17 +43,10 @@ public abstract class WalkingMammal implements Drawable {
 	public void walk() {
 
 		switch (direction) {
-		case 0:
-			this.y = this.y - stepsize;
-			break;
-		case 180:
-			this.x = this.x - stepsize;
-			break;
-		case 270:
-			this.y = this.y + stepsize;
-			break;
-		case 90:
-			this.x = this.x + stepsize;
+			case 0 -> this.y -= stepsize;
+			case 180 -> this.x -= stepsize;
+			case 270 -> this.y += stepsize;
+			case 90 -> this.x += stepsize;
 		}
 		System.out.println("Animal has moved.");
 	}
@@ -80,6 +73,7 @@ public abstract class WalkingMammal implements Drawable {
 	 * 
 	 * @return A character used to represent the animal
 	 */
+	@Override
 	public abstract char getSymbol();
 
 	public int getX() {

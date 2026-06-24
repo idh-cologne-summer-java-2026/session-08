@@ -4,16 +4,6 @@ public class Horse extends WalkingMammal {
 	static int numberOfHorses = 0;
 
 	/**
-	 * How many "fields" does the horse move if it takes a single step?
-	 */
-	int stepsize = 1;
-
-	/**
-	 * The name of the horse
-	 */
-	String name;
-
-	/**
 	 * The color of the horse's fur
 	 */
 	String color;
