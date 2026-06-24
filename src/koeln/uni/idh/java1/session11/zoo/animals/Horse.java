@@ -59,6 +59,11 @@ public class Horse extends WalkingMammal {
 	public char getSymbol() {
 		return 'H';
 	}
+
+	@Override
+	public WalkingMammal mate(WalkingMammal partner) {
+		return mate((Horse) partner);
+	}
 	
 	
 

@@ -32,8 +32,8 @@ public abstract class WalkingMammal implements Drawable {
 	int stepsize = 1;
 
 	/**
-	 * The current view direction of the horse, on a 360° wheel (compass rose).
-	 * 0 => top, 90 => right, 180 => bottom, 270 => left
+	 * The current view direction of the animal, on a 360° wheel (compass rose).
+	 * 0 => up, 90 => right, 180 => left, 270 => down
 	 */
 	int direction = 0;
 
@@ -55,7 +55,6 @@ public abstract class WalkingMammal implements Drawable {
 		case 90:
 			this.x = this.x + stepsize;
 		}
-		System.out.println("Animal has moved.");
 	}
 
 	/**
@@ -70,8 +69,15 @@ public abstract class WalkingMammal implements Drawable {
 	 */
 	public void turn(int turnDirection) {
 		this.direction = (int) (this.direction + (Math.signum(turnDirection) * 90) % 360);
-		System.out.println("Animal " + name + " has turned and is now looking towards " + direction + ".");
+	}
 
+	/**
+	 * Sets the direction of the animal directly.
+	 * 
+	 * @param direction The new direction (0=up, 90=right, 180=left, 270=down)
+	 */
+	public void setDirection(int direction) {
+		this.direction = direction;
 	}
 
 	/**
@@ -81,6 +87,14 @@ public abstract class WalkingMammal implements Drawable {
 	 * @return A character used to represent the animal
 	 */
 	public abstract char getSymbol();
+
+	/**
+	 * Two animals of the same kind mate and produce an offspring.
+	 * 
+	 * @param partner The other animal of the same kind
+	 * @return A newly born animal of the same kind
+	 */
+	public abstract WalkingMammal mate(WalkingMammal partner);
 
 	public int getX() {
 		return x;

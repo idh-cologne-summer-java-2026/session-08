@@ -13,4 +13,9 @@ public class Alpaca extends WalkingMammal {
 	public void spit() {
 		System.out.println("Ein Alpaka spuckt.");
 	}
+
+	@Override
+	public WalkingMammal mate(WalkingMammal partner) {
+		return new Alpaca();
+	}
 }
