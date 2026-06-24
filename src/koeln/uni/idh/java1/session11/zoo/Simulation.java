@@ -1,8 +1,10 @@
 package koeln.uni.idh.java1.session11.zoo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import koeln.uni.idh.java1.session11.zoo.animals.WalkingMammal;
 import koeln.uni.idh.java1.session11.zoo.ui.AsciiImage;
@@ -52,19 +54,28 @@ public class Simulation {
 			animal.setY(Math.max(0, Math.min(height - 1, animal.getY())));
 		}
 
-		// Collect offspring from meetings of same-kind animals
+		// Collect offspring from meetings of same-kind animals (at most one
+		// offspring per cell per species per step)
 		List<WalkingMammal> offspring = new ArrayList<>();
+		Set<String> mated = new HashSet<>();
 		List<WalkingMammal> snapshot = new ArrayList<>(animals);
-		for (int i = 0; i < snapshot.size() && !isHalfFull(offspring.size()); i++) {
-			for (int j = i + 1; j < snapshot.size() && !isHalfFull(offspring.size()); j++) {
+		outer:
+		for (int i = 0; i < snapshot.size(); i++) {
+			for (int j = i + 1; j < snapshot.size(); j++) {
 				WalkingMammal a = snapshot.get(i);
 				WalkingMammal b = snapshot.get(j);
+				String cellKey = a.getX() + "," + a.getY() + "," + a.getClass().getName();
 				if (a.getX() == b.getX() && a.getY() == b.getY()
-						&& a.getClass() == b.getClass()) {
+						&& a.getClass() == b.getClass()
+						&& !mated.contains(cellKey)) {
+					mated.add(cellKey);
 					WalkingMammal child = a.mate(b);
 					child.setX(a.getX());
 					child.setY(a.getY());
 					offspring.add(child);
+					if (isHalfFull(offspring.size())) {
+						break outer;
+					}
 				}
 			}
 		}
@@ -92,15 +103,15 @@ public class Simulation {
 	 * printing the grid after every step.
 	 */
 	public void run() {
-		int target = target();
+		int targetCount = target();
 		System.out.println("Starting simulation on a " + width + "x" + height
-				+ " grid (" + (width * height) + " slots, target: " + target + " animals).");
+				+ " grid (" + (width * height) + " slots, target: " + targetCount + " animals).");
 		System.out.println("Initial animals: " + animals.size());
 		System.out.println();
 		display(0);
 
 		int step = 0;
-		while (animals.size() < target) {
+		while (animals.size() < targetCount) {
 			step();
 			step++;
 			display(step);
