@@ -1,18 +1,18 @@
 package koeln.uni.idh.java1.session11.zoo.animals;
 
-public class Turtle extends WalkingMammal {
+public class Zebra extends WalkingMammal {
 
-	public Turtle() {
+	public Zebra() {
 		System.out.println("A new turtle has been born.");
 		this.stepsize = 1;
 	}
 
 	@Override
 	public char getSymbol() {
-		return 'u';
+		return 'Z';
 	}
 
 	public void hide() {
-		System.out.println("The turtle hides in its shell.");
+		System.out.println("The zebra hides in its shell.");
 	}
 }

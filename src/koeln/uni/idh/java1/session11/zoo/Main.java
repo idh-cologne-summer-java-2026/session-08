@@ -3,8 +3,8 @@ package koeln.uni.idh.java1.session11.zoo;
 import koeln.uni.idh.java1.session11.zoo.animals.Alpaca;
 import koeln.uni.idh.java1.session11.zoo.animals.Cat;
 import koeln.uni.idh.java1.session11.zoo.animals.Dog;
-import koeln.uni.idh.java1.session11.zoo.animals.Turtle;
 import koeln.uni.idh.java1.session11.zoo.animals.WalkingMammal;
+import koeln.uni.idh.java1.session11.zoo.animals.Zebra;
 import koeln.uni.idh.java1.session11.zoo.ui.AsciiImage;
 
 public class Main {
@@ -13,7 +13,7 @@ public class Main {
 		WalkingMammal wm = new Alpaca();
 		WalkingMammal cat = new Cat();
 		WalkingMammal dog = new Dog("Buddy", "Golden Retriever");
-		WalkingMammal turtle = new Turtle();
+		WalkingMammal turtle = new Zebra();
 
 		AsciiImage ai = new AsciiImage(10, 10);
 
