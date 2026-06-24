@@ -33,6 +33,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
+                    <!-- Exclude test sources from main compile phase.
+                         Required because sourceDirectory 'src' contains
+                         testSourceDirectory 'src/test/java' as a sub-path. -->
                     <excludes>
                         <exclude>test/**</exclude>
                     </excludes>
