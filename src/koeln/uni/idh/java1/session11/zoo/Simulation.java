@@ -1,8 +1,10 @@
 package koeln.uni.idh.java1.session11.zoo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -29,14 +31,47 @@ public class Simulation {
 	}
 
 	/**
-	 * Adds an animal to the simulation at a random position.
+	 * Adds an animal to the simulation at a random free position.
 	 *
 	 * @param animal The animal to add
 	 */
 	public void addAnimal(WalkingMammal animal) {
-		animal.setX(random.nextInt(width));
-		animal.setY(random.nextInt(height));
+		int[] pos = freePosition();
+		animal.setX(pos[0]);
+		animal.setY(pos[1]);
 		animals.add(animal);
+	}
+
+	/**
+	 * Returns the coordinates of a randomly chosen cell that is not currently
+	 * occupied by any animal. Falls back to a purely random cell if (by chance)
+	 * every candidate tried is occupied.
+	 *
+	 * @return int[] with [x, y]
+	 */
+	private int[] freePosition() {
+		Set<Integer> occupied = new HashSet<>();
+		for (WalkingMammal a : animals) {
+			occupied.add(a.getY() * width + a.getX());
+		}
+		// Try random candidates first (up to total-cell attempts)
+		for (int attempt = 0; attempt < width * height; attempt++) {
+			int x = random.nextInt(width);
+			int y = random.nextInt(height);
+			if (!occupied.contains(y * width + x)) {
+				return new int[]{x, y};
+			}
+		}
+		// Exhaustive fallback (only reached when grid is nearly full)
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				if (!occupied.contains(y * width + x)) {
+					return new int[]{x, y};
+				}
+			}
+		}
+		// Grid is completely full – place at random (shouldn't happen due to 50% cap)
+		return new int[]{random.nextInt(width), random.nextInt(height)};
 	}
 
 	/**
@@ -57,21 +92,24 @@ public class Simulation {
 		// Collect offspring from meetings of same-kind animals (at most one
 		// offspring per cell per species per step)
 		List<WalkingMammal> offspring = new ArrayList<>();
-		Set<String> mated = new HashSet<>();
+		// Track which (cell, species) pairs have already bred this step
+		Map<Class<?>, Set<Integer>> mated = new HashMap<>();
 		List<WalkingMammal> snapshot = new ArrayList<>(animals);
 		outer:
 		for (int i = 0; i < snapshot.size(); i++) {
 			for (int j = i + 1; j < snapshot.size(); j++) {
 				WalkingMammal a = snapshot.get(i);
 				WalkingMammal b = snapshot.get(j);
-				String cellKey = a.getX() + "," + a.getY() + "," + a.getClass().getName();
+				int cellIndex = a.getY() * width + a.getX();
+				Set<Integer> matedCells = mated.computeIfAbsent(a.getClass(), k -> new HashSet<>());
 				if (a.getX() == b.getX() && a.getY() == b.getY()
 						&& a.getClass() == b.getClass()
-						&& !mated.contains(cellKey)) {
-					mated.add(cellKey);
+						&& !matedCells.contains(cellIndex)) {
+					matedCells.add(cellIndex);
 					WalkingMammal child = a.mate(b);
-					child.setX(a.getX());
-					child.setY(a.getY());
+					int[] pos = freePosition();
+					child.setX(pos[0]);
+					child.setY(pos[1]);
 					offspring.add(child);
 					if (isHalfFull(offspring.size())) {
 						break outer;
