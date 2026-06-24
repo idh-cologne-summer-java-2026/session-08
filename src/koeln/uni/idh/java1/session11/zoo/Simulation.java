@@ -38,13 +38,18 @@ public class Simulation {
 	public void addAnimal(WalkingMammal animal) {
 		Set<Integer> occupied = occupiedCells();
 		int[] pos = freePosition(occupied);
+		if (pos == null) {
+			throw new IllegalStateException("Cannot add animal: the grid is completely full.");
+		}
 		animal.setX(pos[0]);
 		animal.setY(pos[1]);
 		animals.add(animal);
 	}
 
 	/**
-	 * Builds the set of currently occupied cell indices (y * width + x).
+	 * Returns a snapshot of currently occupied cell indices (y * width + x) at the
+	 * time of the call. The returned set is independent of the animals list and
+	 * does not update automatically as animals move.
 	 */
 	private Set<Integer> occupiedCells() {
 		Set<Integer> occupied = new HashSet<>();
@@ -59,9 +64,10 @@ public class Simulation {
 	 * of occupied cell indices. The set is updated in place when a free cell is
 	 * found, so subsequent calls in the same step reflect already-claimed cells.
 	 * Falls back to an exhaustive scan when few free cells remain.
+	 * Returns null if every cell on the grid is occupied.
 	 *
 	 * @param occupied mutable set of occupied cell indices (y * width + x)
-	 * @return int[] with [x, y]
+	 * @return int[] with [x, y], or null if the grid is completely full
 	 */
 	private int[] freePosition(Set<Integer> occupied) {
 		// Try a small number of random candidates first
@@ -84,8 +90,8 @@ public class Simulation {
 				}
 			}
 		}
-		// Grid is completely full – place at random (shouldn't happen due to 50% cap)
-		return new int[]{random.nextInt(width), random.nextInt(height)};
+		// Grid is completely full (shouldn't happen due to 50% cap)
+		return null;
 	}
 
 	/**
@@ -124,6 +130,9 @@ public class Simulation {
 					matedCells.add(cellIndex);
 					WalkingMammal child = a.mate(b);
 					int[] pos = freePosition(occupied);
+					if (pos == null) {
+						break outer; // no free cells left
+					}
 					child.setX(pos[0]);
 					child.setY(pos[1]);
 					offspring.add(child);
