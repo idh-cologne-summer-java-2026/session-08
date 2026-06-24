@@ -36,36 +36,50 @@ public class Simulation {
 	 * @param animal The animal to add
 	 */
 	public void addAnimal(WalkingMammal animal) {
-		int[] pos = freePosition();
+		Set<Integer> occupied = occupiedCells();
+		int[] pos = freePosition(occupied);
 		animal.setX(pos[0]);
 		animal.setY(pos[1]);
 		animals.add(animal);
 	}
 
 	/**
-	 * Returns the coordinates of a randomly chosen cell that is not currently
-	 * occupied by any animal. Falls back to a purely random cell if (by chance)
-	 * every candidate tried is occupied.
-	 *
-	 * @return int[] with [x, y]
+	 * Builds the set of currently occupied cell indices (y * width + x).
 	 */
-	private int[] freePosition() {
+	private Set<Integer> occupiedCells() {
 		Set<Integer> occupied = new HashSet<>();
 		for (WalkingMammal a : animals) {
 			occupied.add(a.getY() * width + a.getX());
 		}
-		// Try random candidates first (up to total-cell attempts)
-		for (int attempt = 0; attempt < width * height; attempt++) {
+		return occupied;
+	}
+
+	/**
+	 * Returns the coordinates of a randomly chosen free cell given a pre-built set
+	 * of occupied cell indices. The set is updated in place when a free cell is
+	 * found, so subsequent calls in the same step reflect already-claimed cells.
+	 * Falls back to an exhaustive scan when few free cells remain.
+	 *
+	 * @param occupied mutable set of occupied cell indices (y * width + x)
+	 * @return int[] with [x, y]
+	 */
+	private int[] freePosition(Set<Integer> occupied) {
+		// Try a small number of random candidates first
+		for (int attempt = 0; attempt < 20; attempt++) {
 			int x = random.nextInt(width);
 			int y = random.nextInt(height);
-			if (!occupied.contains(y * width + x)) {
+			int idx = y * width + x;
+			if (!occupied.contains(idx)) {
+				occupied.add(idx);
 				return new int[]{x, y};
 			}
 		}
 		// Exhaustive fallback (only reached when grid is nearly full)
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				if (!occupied.contains(y * width + x)) {
+				int idx = y * width + x;
+				if (!occupied.contains(idx)) {
+					occupied.add(idx);
 					return new int[]{x, y};
 				}
 			}
@@ -94,6 +108,8 @@ public class Simulation {
 		List<WalkingMammal> offspring = new ArrayList<>();
 		// Track which (cell, species) pairs have already bred this step
 		Map<Class<?>, Set<Integer>> mated = new HashMap<>();
+		// Build occupied set once and reuse/update across all offspring placements
+		Set<Integer> occupied = occupiedCells();
 		List<WalkingMammal> snapshot = new ArrayList<>(animals);
 		outer:
 		for (int i = 0; i < snapshot.size(); i++) {
@@ -107,7 +123,7 @@ public class Simulation {
 						&& !matedCells.contains(cellIndex)) {
 					matedCells.add(cellIndex);
 					WalkingMammal child = a.mate(b);
-					int[] pos = freePosition();
+					int[] pos = freePosition(occupied);
 					child.setX(pos[0]);
 					child.setY(pos[1]);
 					offspring.add(child);
