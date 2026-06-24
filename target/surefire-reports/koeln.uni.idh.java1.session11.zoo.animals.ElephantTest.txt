@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: koeln.uni.idh.java1.session11.zoo.animals.ElephantTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in koeln.uni.idh.java1.session11.zoo.animals.ElephantTest
